@@ -1,7 +1,9 @@
 <!doctype html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>تعاوني | فرص التدريب التعاوني</title><link rel="stylesheet" href="/style.css"></head><body><header><nav class="wrap nav"><strong class="brand">تعاوني<span>•</span></strong><div class="navlinks"><a href="#jobs">فرص التدريب</a><a href="#account">حسابي</a></div><button id="logout" class="outline" hidden>تسجيل الخروج</button></nav></header><main class="wrap"><section class="hero"><div class="eyebrow">منصة التدريب التعاوني السعودية</div><h1>ابدأ مستقبلك المهني مع <em>تعاوني</em></h1><p>نربط الطلاب بالشركات والجهات التي تقدم فرص التدريب التعاوني. سجّل، اكتشف الفرص، وتابع طلباتك في مكان واحد.</p><a class="primary linkbtn" href="#jobs">استكشف الفرص ←</a></section><section class="panel" id="account"><h2>حسابك</h2><p id="welcome">أنشئ حسابًا أو سجّل الدخول للبدء.</p><div id="authForms" class="cols"><form id="register"><h3>إنشاء حساب</h3><label>الاسم<input name="name" required minlength="2" maxlength="100"></label><label>البريد الإلكتروني<input name="email" type="email" required></label><label>كلمة المرور (10 أحرف على الأقل)<input name="password" type="password" minlength="10" required></label><label>نوع الحساب<select name="role"><option value="student">طالب</option><option value="company">شركة</option><option value="university">جامعة / كلية</option></select></label><button class="primary">إنشاء حساب</button></form><form id="login"><h3>تسجيل الدخول</h3><label>البريد الإلكتروني<input name="email" type="email" required></label><label>كلمة المرور<input name="password" type="password" required></label><button class="primary">دخول</button></form></div><p id="notice" role="status" aria-live="polite"></p></section><section id="jobs"><h2>فرص التدريب</h2><form id="search" class="filters"><input name="q" placeholder="ابحث بالتخصص أو المسمى"><input name="city" placeholder="المدينة"><button class="primary">بحث</button></form><div id="jobList" class="cards"></div></section><section id="dashboard" class="panel" hidden><h2>لوحة التحكم</h2><div id="companyArea" hidden><h3>نشر فرصة تدريب</h3><form id="newJob" class="stack"><input name="title" placeholder="المسمى التدريبي" required minlength="2"><input name="major" placeholder="التخصص" required minlength="2"><input name="city" placeholder="المدينة" required minlength="2"><textarea name="description" placeholder="وصف الفرصة ومتطلباتها" required minlength="10"></textarea><button class="primary">نشر الفرصة</button></form></div><h3>الطلبات</h3><div id="applications"></div></section></main><footer>© تعاوني 2026 — نسخة تشغيلية أولية</footer><script src="/app.js" defer></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-  const SUPABASE_URL = "https://rnjesgjtjsbaxyafklsu.supabase.co/rest/v1/";
+  const SUPABASE_URL = "https://rnjesgjtjsbaxyafklsu.supabase.co";
   const SUPABASE_KEY = "sb_publishable_hVLMaDbWG-iAaQCImWDmJA_ht04LPbY";
 
   const supabaseClient = window.supabase.createClient(
@@ -9,6 +11,6 @@
     SUPABASE_KEY
   );
 </script>
-  
+
 </body>
 </html>
