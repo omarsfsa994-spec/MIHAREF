@@ -4,64 +4,127 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b6b46">
+  <meta name="description" content="تعاوني منصة سعودية تربط الطلاب بفرص التدريب التعاوني لدى الشركات والجامعات.">
+
   <title>تعاوني | فرص التدريب التعاوني</title>
-  <link rel="stylesheet" href="/style.css">
+
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
   <header>
     <nav class="wrap nav">
       <strong class="brand">تعاوني<span>•</span></strong>
+
       <div class="navlinks">
         <a href="#jobs">فرص التدريب</a>
         <a href="#account">حسابي</a>
       </div>
-      <button id="logout" class="outline" hidden>تسجيل الخروج</button>
+
+      <button id="logout" class="outline" hidden>
+        تسجيل الخروج
+      </button>
     </nav>
   </header>
 
   <main class="wrap">
     <section class="hero">
       <div class="eyebrow">منصة التدريب التعاوني السعودية</div>
+
       <h1>ابدأ مستقبلك المهني مع <em>تعاوني</em></h1>
-      <p>نربط الطلاب بالشركات والجهات التي تقدم فرص التدريب التعاوني. سجّل، اكتشف الفرص، وتابع طلباتك في مكان واحد.</p>
-      <a class="primary linkbtn" href="#jobs">استكشف الفرص ←</a>
+
+      <p>
+        نربط الطلاب بالشركات والجهات التي تقدم فرص التدريب التعاوني.
+        سجّل، اكتشف الفرص، وتابع طلباتك في مكان واحد.
+      </p>
+
+      <a class="primary linkbtn" href="#jobs">
+        استكشف الفرص ←
+      </a>
     </section>
 
     <section class="panel" id="account">
       <h2>حسابك</h2>
+
       <p id="welcome">أنشئ حسابًا أو سجّل الدخول للبدء.</p>
 
       <div id="authForms" class="cols">
         <form id="register">
           <h3>إنشاء حساب</h3>
-          <label>الاسم
-            <input name="name" required minlength="2" maxlength="100">
+
+          <label>
+            الاسم
+            <input
+              name="name"
+              type="text"
+              required
+              minlength="2"
+              maxlength="100"
+              autocomplete="name"
+            >
           </label>
-          <label>البريد الإلكتروني
-            <input name="email" type="email" required>
+
+          <label>
+            البريد الإلكتروني
+            <input
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+            >
           </label>
-          <label>كلمة المرور (10 أحرف على الأقل)
-            <input name="password" type="password" minlength="10" required>
+
+          <label>
+            كلمة المرور (10 أحرف على الأقل)
+            <input
+              name="password"
+              type="password"
+              minlength="10"
+              required
+              autocomplete="new-password"
+            >
           </label>
-          <label>نوع الحساب
+
+          <label>
+            نوع الحساب
             <select name="role" required>
               <option value="student">طالب</option>
               <option value="company">شركة</option>
               <option value="university">جامعة / كلية</option>
             </select>
           </label>
-          <button class="primary" type="submit">إنشاء حساب</button>
+
+          <button class="primary" type="submit">
+            إنشاء حساب
+          </button>
         </form>
 
         <form id="login">
           <h3>تسجيل الدخول</h3>
-          <label>البريد الإلكتروني
-            <input name="email" type="email" required>
+
+          <label>
+            البريد الإلكتروني
+            <input
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+            >
           </label>
-          <label>كلمة المرور
-            <input name="password" type="password" required>
+
+          <label>
+            كلمة المرور
+            <input
+              name="password"
+              type="password"
+              required
+              autocomplete="current-password"
+            >
           </label>
-          <button class="primary" type="submit">دخول</button>
+
+          <button class="primary" type="submit">
+            دخول
+          </button>
         </form>
       </div>
 
@@ -70,34 +133,83 @@
 
     <section id="jobs">
       <h2>فرص التدريب</h2>
+
       <form id="search" class="filters">
-        <input name="q" placeholder="ابحث بالتخصص أو المسمى">
-        <input name="city" placeholder="المدينة">
-        <button class="primary" type="submit">بحث</button>
+        <input
+          name="q"
+          type="search"
+          placeholder="ابحث بالتخصص أو المسمى"
+        >
+
+        <input
+          name="city"
+          type="text"
+          placeholder="المدينة"
+        >
+
+        <button class="primary" type="submit">
+          بحث
+        </button>
       </form>
+
       <div id="jobList" class="cards"></div>
     </section>
 
     <section id="dashboard" class="panel" hidden>
       <h2>لوحة التحكم</h2>
+
       <div id="companyArea" hidden>
         <h3>نشر فرصة تدريب</h3>
+
         <form id="newJob" class="stack">
-          <input name="title" placeholder="المسمى التدريبي" required minlength="2">
-          <input name="major" placeholder="التخصص" required minlength="2">
-          <input name="city" placeholder="المدينة" required minlength="2">
-          <textarea name="description" placeholder="وصف الفرصة ومتطلباتها" required minlength="10"></textarea>
-          <button class="primary" type="submit">نشر الفرصة</button>
+          <input
+            name="title"
+            type="text"
+            placeholder="المسمى التدريبي"
+            required
+            minlength="2"
+          >
+
+          <input
+            name="major"
+            type="text"
+            placeholder="التخصص"
+            required
+            minlength="2"
+          >
+
+          <input
+            name="city"
+            type="text"
+            placeholder="المدينة"
+            required
+            minlength="2"
+          >
+
+          <textarea
+            name="description"
+            placeholder="وصف الفرصة ومتطلباتها"
+            required
+            minlength="10"
+          ></textarea>
+
+          <button class="primary" type="submit">
+            نشر الفرصة
+          </button>
         </form>
       </div>
+
       <h3>الطلبات</h3>
       <div id="applications"></div>
     </section>
   </main>
 
-  <footer>© تعاوني 2026 — نسخة تشغيلية أولية</footer>
+  <footer>© تعاوني 2026 — منصة التدريب التعاوني السعودية</footer>
 
+  <!-- مكتبة Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/app.js" defer></script>
+
+  <!-- ملف برمجة الموقع -->
+  <script src="./app.js" defer></script>
 </body>
 </html>
