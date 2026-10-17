@@ -30,29 +30,41 @@
     <section class="panel" id="account">
       <h2>حسابك</h2>
       <p id="welcome">أنشئ حسابًا أو سجّل الدخول للبدء.</p>
+
       <div id="authForms" class="cols">
         <form id="register">
           <h3>إنشاء حساب</h3>
-          <label>الاسم<input name="name" required minlength="2" maxlength="100"></label>
-          <label>البريد الإلكتروني<input name="email" type="email" required></label>
-          <label>كلمة المرور (10 أحرف على الأقل)<input name="password" type="password" minlength="10" required></label>
+          <label>الاسم
+            <input name="name" required minlength="2" maxlength="100">
+          </label>
+          <label>البريد الإلكتروني
+            <input name="email" type="email" required>
+          </label>
+          <label>كلمة المرور (10 أحرف على الأقل)
+            <input name="password" type="password" minlength="10" required>
+          </label>
           <label>نوع الحساب
-            <select name="role">
+            <select name="role" required>
               <option value="student">طالب</option>
               <option value="company">شركة</option>
               <option value="university">جامعة / كلية</option>
             </select>
           </label>
-          <button class="primary">إنشاء حساب</button>
+          <button class="primary" type="submit">إنشاء حساب</button>
         </form>
 
         <form id="login">
           <h3>تسجيل الدخول</h3>
-          <label>البريد الإلكتروني<input name="email" type="email" required></label>
-          <label>كلمة المرور<input name="password" type="password" required></label>
-          <button class="primary">دخول</button>
+          <label>البريد الإلكتروني
+            <input name="email" type="email" required>
+          </label>
+          <label>كلمة المرور
+            <input name="password" type="password" required>
+          </label>
+          <button class="primary" type="submit">دخول</button>
         </form>
       </div>
+
       <p id="notice" role="status" aria-live="polite"></p>
     </section>
 
@@ -61,7 +73,7 @@
       <form id="search" class="filters">
         <input name="q" placeholder="ابحث بالتخصص أو المسمى">
         <input name="city" placeholder="المدينة">
-        <button class="primary">بحث</button>
+        <button class="primary" type="submit">بحث</button>
       </form>
       <div id="jobList" class="cards"></div>
     </section>
@@ -75,7 +87,7 @@
           <input name="major" placeholder="التخصص" required minlength="2">
           <input name="city" placeholder="المدينة" required minlength="2">
           <textarea name="description" placeholder="وصف الفرصة ومتطلباتها" required minlength="10"></textarea>
-          <button class="primary">نشر الفرصة</button>
+          <button class="primary" type="submit">نشر الفرصة</button>
         </form>
       </div>
       <h3>الطلبات</h3>
@@ -86,12 +98,6 @@
   <footer>© تعاوني 2026 — نسخة تشغيلية أولية</footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    window.supabaseClient = window.supabase.createClient(
-      "https://rnjesgjtjsbaxyafklsu.supabase.co",
-      "sb_publishable_hVLMaDbWG-iAaQCImWDmJA_ht04LPbY"
-    );
-  </script>
   <script src="/app.js" defer></script>
 </body>
 </html>
