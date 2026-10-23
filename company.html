@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>لوحة الشركة | مهارف</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f7f4; margin: 0; color: #183b2b; }
+    header { background: #176b45; color: white; padding: 22px; }
+    main { max-width: 1000px; margin: 25px auto; padding: 16px; }
+    .card { background: white; padding: 20px; margin-bottom: 18px; border-radius: 12px; box-shadow: 0 2px 8px #0001; }
+    input, textarea, select, button { font: inherit; padding: 11px; margin: 5px 0; border-radius: 7px; border: 1px solid #ccd8cf; box-sizing: border-box; }
+    input, textarea, select { width: 100%; }
+    button { background: #176b45; color: white; border: 0; cursor: pointer; padding: 11px 18px; }
+    .muted { color: #64756a; }
+    .item { border-top: 1px solid #e2e8e3; padding: 14px 0; }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>مهارف | لوحة الشركة</h1>
+  <p>إدارة فرص التدريب واستقبال طلبات الطلاب</p>
+</header>
+
+<main>
+  <div class="card">
+    <h2>مرحبًا بك</h2>
+    <p id="message" class="muted">جارٍ التحقق من تسجيل الدخول...</p>
+    <button id="logout">تسجيل الخروج</button>
+  </div>
+
+  <div class="card">
+    <h2>إضافة فرصة جديدة</h2>
+    <form id="opportunityForm">
+      <label for="title">عنوان الفرصة</label>
+      <input id="title" required placeholder="مثال: تدريب تعاوني في تقنية المعلومات">
+
+      <label for="city">المدينة</label>
+      <input id="city" required placeholder="مثال: جدة">
+
+      <label for="kind">نوع الفرصة</label>
+      <select id="kind">
+        <option value="تدريب تعاوني">تدريب تعاوني</option>
+        <option value="تدريب صيفي">تدريب صيفي</option>
+        <option value="وظيفة">وظيفة</option>
+        <option value="تطوع">تطوع</option>
+      </select>
+
+      <label for="description">وصف الفرصة</label>
+      <textarea id="description" rows="4" required placeholder="اكتب تفاصيل الفرصة وشروطها"></textarea>
+
+      <button type="submit">نشر الفرصة</button>
+    </form>
+    <p id="formMessage" class="muted"></p>
+  </div>
+
+  <div class="card">
+    <h2>فرصي المنشورة</h2>
+    <div id="opportunities">جارٍ تحميل الفرص...</div>
+  </div>
+
+  <div class="card">
+    <h2>طلبات الطلاب</h2>
+    <div id="applications">جارٍ تحميل الطلبات...</div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+(async function () {
+  const message = document.getElementById('message');
+  const formMessage = document.getElementById('formMessage');
+  const opportunitiesBox = document.getElementById('opportunities');
+  const applicationsBox = document.getElementById('applications');
+
+  if (!window.MIHAREF_CONFIG ||
+      !window.MIHAREF_CONFIG.supabaseUrl ||
+      !window.MIHAREF_CONFIG.supabaseKey) {
+    message.textContent = 'إعدادات Supabase غير موجودة. نحتاج إلى إنشاء ملف config.js وإضافة بيانات المشروع.';
+    opportunitiesBox.textContent = 'لم يتم الاتصال بقاعدة البيانات.';
+    applicationsBox.textContent = 'لم يتم الاتصال بقاعدة البيانات.';
+    return;
+  }
+
+  const db = window.supabase.createClient(
+    window.MIHAREF_CONFIG.supabaseUrl,
+    window.MIHAREF_CONFIG.supabaseKey
+  );
+
+  const { data: { user }, error: authError } = await db.auth.getUser();
+
+  if (authError || !user) {
+    message.textContent = 'يجب تسجيل الدخول أولًا من الصفحة الرئيسية.';
+    opportunitiesBox.textContent = 'سجّل الدخول لعرض الفرص.';
+    applicationsBox.textContent = 'سجّل الدخول لعرض الطلبات.';
+    return;
+  }
+
+  const { data: profile } = await db
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (!profile || profile.role !== 'company') {
+    message.textContent = 'هذا الحساب ليس مسجلًا بدور شركة. تأكد من دور الحساب في جدول profiles.';
+    return;
+  }
+
+  message.textContent = 'تم تسجيل الدخول بنجاح.';
+  document.getElementById('logout').onclick = async () => {
+    await db.auth.signOut();
+    location.href = 'index.html';
+  };
+
+  async function loadOpportunities() {
+    const { data, error } = await db
+      .from('opportunities')
+      .select('id,title,city,kind,description,status,created_at')
+      .eq('company_id', user.id)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      opportunitiesBox.textContent = 'تعذر تحميل الفرص: ' + error.message;
+      return;
+    }
+
+    opportunitiesBox.innerHTML = '';
+
+    if (!data || data.length === 0) {
+      opportunitiesBox.textContent = 'لم تنشر أي فرصة حتى الآن.';
+      return;
+    }
+
+    data.forEach(op => {
+      const item = document.createElement('div');
+      item.className = 'item';
+      const title = document.createElement('h3');
+      title.textContent = op.title;
+      const details = document.createElement('p');
+      details.textContent = (op.city || '') + ' — ' + (op.kind || '');
+      const description = document.createElement('p');
+      description.textContent = op.description || '';
+      item.append(title, details, description);
+
+      const remove = document.createElement('button');
+      remove.textContent = 'حذف الفرصة';
+      remove.onclick = async () => {
+        if (!confirm('هل تريد حذف هذه الفرصة؟')) return;
+        const { error: deleteError } = await db
+          .from('opportunities')
+          .delete()
+          .eq('id', op.id)
+          .eq('company_id', user.id);
+        if (deleteError) {
+          alert('تعذر الحذف: ' + deleteError.message);
+        } else {
+          await loadOpportunities();
+        }
+      };
+      item.appendChild(remove);
+      opportunitiesBox.appendChild(item);
+    });
+  }
+
+  document.getElementById('opportunityForm').addEventListener('submit', async event => {
+    event.preventDefault();
+    formMessage.textContent = 'جارٍ نشر الفرصة...';
+
+    const { error } = await db.from('opportunities').insert({
+      company_id: user.id,
+      title: document.getElementById('title').value.trim(),
+      city: document.getElementById('city').value.trim(),
+      kind: document.getElementById('kind').value,
+      description: document.getElementById('description').value.trim(),
+      status: 'open'
+    });
+
+    if (error) {
+      formMessage.textContent = 'تعذر النشر: ' + error.message;
+      return;
+    }
+
+    formMessage.textContent = 'تم نشر الفرصة بنجاح.';
+    event.target.reset();
+    await loadOpportunities();
+  });
+
+  async function loadApplications() {
+    const { data, error } = await db
+      .from('applications')
+      .select('id,student_id,status,created_at,opportunity_id,opportunities!inner(title,company_id)')
+      .eq('opportunities.company_id', user.id)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      applicationsBox.textContent = 'تعذر تحميل الطلبات: ' + error.message;
+      return;
+    }
+
+    applicationsBox.innerHTML = '';
+
+    if (!data || data.length === 0) {
+      applicationsBox.textContent = 'لا توجد طلبات مقدمة على فرصك حتى الآن.';
+      return;
+    }
+
+    data.forEach(app => {
+      const item = document.createElement('div');
+      item.className = 'item';
+      const heading = document.createElement('h3');
+      heading.textContent = app.opportunities.title;
+      const status = document.createElement('p');
+      status.textContent = 'حالة الطلب: ' + (app.status || 'قيد المراجعة');
+      const student = document.createElement('p');
+      student.textContent = 'رقم حساب الطالب: ' + app.student_id;
+      item.append(heading, status, student);
+
+      ['accepted', 'rejected'].forEach(nextStatus => {
+        const btn = document.createElement('button');
+        btn.textContent = nextStatus === 'accepted' ? 'قبول الطالب' : 'رفض الطلب';
+        btn.style.marginLeft = '8px';
+        btn.onclick = async () => {
+          const { error: updateError } = await db
+            .from('applications')
+            .update({ status: nextStatus })
+            .eq('id', app.id);
+
+          if (updateError) {
+            alert('تعذر تحديث الطلب: ' + updateError.message);
+          } else {
+            await loadApplications();
+          }
+        };
+        item.appendChild(btn);
+      });
+
+      applicationsBox.appendChild(item);
+    });
+  }
+
+  await loadOpportunities();
+  await loadApplications();
+})();
+</script>
+</body>
+</html>
